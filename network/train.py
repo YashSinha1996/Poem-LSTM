@@ -47,7 +47,9 @@ print("Sanity check X. Dimension: {0} Sentence length: {1}".format(X.shape, sent
 # Define our model
 print("Let's build a brain!")
 model = Sequential()
-model.add(LSTM(256, input_shape=(sentence_length, num_chars)))
+model.add(LSTM(128, input_shape=(sentence_length, num_chars)))
+model.add(LSTM(64, return_sequences=True))
+model.add(LSTM(64, return_sequences=True))
 model.add(Dense(num_chars))
 model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
@@ -63,4 +65,4 @@ checkpoint = ModelCheckpoint(file_path, monitor="loss", verbose=1, save_best_onl
 callbacks = [checkpoint]
 
 # Action time! [Insert guitar solo here]
-model.fit(X, y, nb_epoch=30, batch_size=128, callbacks=callbacks)
+model.fit(X, y, nb_epoch=30, batch_size=128, validation_split=0.1,callbacks=callbacks)

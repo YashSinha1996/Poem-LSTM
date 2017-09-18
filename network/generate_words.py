@@ -33,7 +33,7 @@ class GenerativeNetwork:
         print("ingenerative")
         print('loading word2vec')
         self.w2v = gensim.models.KeyedVectors.load_word2vec_format(
-            '~/GoogleNews-vectors-negative300.bin', binary=True)
+            '/home/yash/Downloads/Work/GoogleNews-vectors-negative300.bin', binary=True)
         print('word2vec loaded !!')
 
         # Get a unique identifier for each char in the corpus,

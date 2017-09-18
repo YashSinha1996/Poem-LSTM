@@ -1,6 +1,6 @@
 import numpy as np
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, Activation, Dropout
+from keras.layers import LSTM, Dense, Activation, Dropout, TimeDistributed
 from keras.callbacks import ModelCheckpoint
 from nltk.tokenize import word_tokenize
 import gensim
@@ -38,7 +38,7 @@ print(len(encoding))
 
 print('loading word2vec')
 model = gensim.models.KeyedVectors.load_word2vec_format(
-    '~/GoogleNews-vectors-negative300.bin', binary=True)
+    '/home/yash/Downloads/Work/GoogleNews-vectors-negative300.bin', binary=True)
 print('word2vec loaded !!')
 
 
@@ -67,24 +67,33 @@ for i, sentence in enumerate(X_data):
         else:
             y_t[len(encoding) - 1] = 1
         X.append(X_t)
+        # print(X_t.shape)
+        # exit()
         y.append(y_t)
         num_sentences += 1
 
 
 X = np.array(X)
 y = np.array(y)
+print(X.shape,y.shape)
+
 # Define our model
 print("Let's build a brain!")
 model = Sequential()
-model.add(LSTM(len(encoding), input_shape=(sentence_length, 300)))
-model.add(Dropout(0.5))
+model.add(TimeDistributed(Dense(50,activation='relu'), input_shape=(sentence_length, 300)))
+model.add(LSTM(32,return_sequences=True))
+model.add(Dropout(0.1))
+model.add(LSTM(16, return_sequences=True))
+model.add(Dropout(0.1))
+model.add(LSTM(16))
+model.add(Dropout(0.1))
 model.add(Dense(len(encoding)))
 model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # Dump our model architecture to a file so we can load it elsewhere
 architecture = model.to_yaml()
-with open('model_words.yaml', 'a') as model_file:
+with open('model_words.yaml', 'w') as model_file:
     model_file.write(architecture)
 
 # Set up checkpoints
@@ -94,4 +103,4 @@ checkpoint = ModelCheckpoint(
 callbacks = [checkpoint]
 
 # Action time! [Insert guitar solo here]
-model.fit(X, y, nb_epoch=5, batch_size=8, callbacks=callbacks)
+model.fit(X,y, epochs=5, batch_size=8, callbacks=callbacks)

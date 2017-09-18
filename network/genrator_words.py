@@ -60,6 +60,6 @@ def sonnet(old_seed_phrase="", error=5):
     return message
 
 if __name__ == '__main__':
-    poem = sonnet(error=0)
+    poem = sonnet()
     for line in poem:
         print(line)

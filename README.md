@@ -1,8 +1,13 @@
-# shakespeare-LSTM
+# Prose-LSTM
 
 ![Robot Shakespeare](https://vivshaw.github.io/images/robot-shakespeare-teaser.png)
 
-a Keras neural network trained to write Shakespearean sonnets, with an [interactive Flask interface](http://robot-shakespeare.herokuapp.com/).
+a Keras neural network trained to write ~Shakespearean sonnets~ SO's poems. Letting shakespear name be, because I had got the original idea from it.
+
+## Diffrences from original
+This version by me implements a word-level network instead of charecter level network. I did this because I noticed that the orignal word-level generator was generating senseless words when given some proper poems.
+
+To tackle this, the current model takes word2vec vector sequence as input and tries to generate the next words accrding to the current sequence, instead of doing the same at a charecter level.
 
 ## Requirements
 
@@ -13,44 +18,22 @@ pip install h5py
 pip install Flask
 pip install Flask-wtf
 pip install gunicorn
+pip install gensim
 ```
-
+Download pre-trained word2vec from google
 ## Training the network
 
 ```
-python network/train.py
+python network/train_words.py
 ```
 
 The weights will be checkpointed as hdf5 files with the format `weights-{epoch:02d}-{loss:.3f}.hdf5` and the model will be dumped as `model.yaml`. If you wish to use a different corpus, just drop it in & edit `network/train.py`.
 
 ## Generating text
-Edit `network/generate.py` to use your new weights and model if desired, then:
+Edit `network/generate_words.py` to use your new weights and model if desired, then:
 
 ```
 python network/generate.py
-```
-
-## Typical output 
-
-```
-ake thee of thy sweet self dost see,
-From heaven thee, as the beauty of thy didge?
-Then were thou art my love whose soor coll, and she vounes,
-That in my stars in his praise the ever wor,
-Whose whould his spiret the deser thee is bart,
-  And thou thy self dost thou mayst live in thee
-  Then do I not the wrose to deepile lease.
-
-The worthous shalt be bland nor my seas,
-With pentter than the owness doth bear,
-Where that beauty like of many a forming.
-Thou art as find in that which the thing thee,
-```
-
-## Running the Flask app
-
-```
-python run-flask.py
 ```
 
 If you wish to use different weights and model than I did, put them in `app/static/model.yaml` and `app/static/weights.hdf5`

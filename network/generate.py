@@ -1,12 +1,12 @@
 import numpy as np
 from keras.models import model_from_yaml
-from random import randint
+from random import randint, random as rd
 
 
 class GenerativeNetwork:
     def __init__(self, corpus_path, model_path, weights_path):
         with open(corpus_path) as corpus_file:
-            self.corpus = corpus_file.read()
+            self.corpus = corpus_file.read(corpus_path)
 
         # Get a unique identifier for each char in the corpus,
         # then make some dicts to ease encoding and decoding
@@ -27,7 +27,8 @@ class GenerativeNetwork:
         self.model.load_weights(weights_path)
         self.model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-    def generate(self, seed_pattern):
+    def generate(self, seed_pattern, error=5):
+
         X = np.zeros((1, self.sentence_length, self.num_chars), dtype=np.bool)
         for i, character in enumerate(seed_pattern):
             X[0, i, self.encoding[character]] = 1
@@ -40,6 +41,10 @@ class GenerativeNetwork:
 
             activations = np.zeros((1, 1, self.num_chars), dtype=np.bool)
             activations[0, 0, prediction] = 1
+            if error and rd() < 0.05:
+                activations[0, 0, prediction] = 0
+                activations[0, 0, randint(
+                    prediction - error, prediction + error) % self.num_chars] = 1
             X = np.concatenate((X[:, 1:, :], activations), axis=1)
 
         return generated_text
@@ -48,7 +53,7 @@ class GenerativeNetwork:
         if seed_phrase:
             phrase_length = len(seed_phrase)
             pattern = ""
-            for i in range (0, self.sentence_length):
+            for i in range(0, self.sentence_length):
                 pattern += seed_phrase[i % phrase_length]
         else:
             seed = randint(0, self.corpus_length - self.sentence_length)

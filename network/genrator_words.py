@@ -1,8 +1,8 @@
-from generate_words import GenerativeNetwork
+from generate_words2 import GenerativeNetwork
 from random import randint
 
 net = GenerativeNetwork(
-    "../sonnets.txt", "model_words.yaml", "weights_words.hdf5")
+    "../sonnets.txt", "model_words.yaml", "weights_words_check.hdf5")
 
 
 # def format_sonnet(text):
@@ -61,5 +61,5 @@ def sonnet(old_seed_phrase="", error=5):
 
 if __name__ == '__main__':
     poem = sonnet()
-    for line in poem:
-        print(line)
+    # for line in poem:
+    #     print(line)

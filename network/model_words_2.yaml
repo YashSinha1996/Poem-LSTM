@@ -32,7 +32,7 @@ config:
     stateful: false
     trainable: true
     unit_forget_bias: true
-    units: 32
+    units: 128
     unroll: false
     use_bias: true
 - class_name: Dropout
@@ -66,7 +66,7 @@ config:
     stateful: false
     trainable: true
     unit_forget_bias: true
-    units: 16
+    units: 64
     unroll: false
     use_bias: true
 - class_name: Dropout
@@ -100,7 +100,7 @@ config:
     stateful: false
     trainable: true
     unit_forget_bias: true
-    units: 16
+    units: 32
     unroll: false
     use_bias: true
 - class_name: Dropout
@@ -121,8 +121,28 @@ config:
     kernel_regularizer: null
     name: dense_1
     trainable: true
-    units: 4
+    units: 32
     use_bias: true
 - class_name: Activation
   config: {activation: relu, name: activation_1, trainable: true}
+- class_name: Dense
+  config:
+    activation: linear
+    activity_regularizer: null
+    bias_constraint: null
+    bias_initializer:
+      class_name: Zeros
+      config: {}
+    bias_regularizer: null
+    kernel_constraint: null
+    kernel_initializer:
+      class_name: VarianceScaling
+      config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+    kernel_regularizer: null
+    name: dense_2
+    trainable: true
+    units: 4
+    use_bias: true
+- class_name: Activation
+  config: {activation: relu, name: activation_2, trainable: true}
 keras_version: 2.0.4
